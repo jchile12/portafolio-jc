@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(npx vite build)",
+      "Bash(npm run build:*)",
+      "Bash(git remote add:*)",
+      "Bash(git status:*)"
+    ]
+  }
+}

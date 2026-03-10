@@ -1,0 +1,145 @@
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import Scene3D from "./Scene3D";
+
+const Hero = () => {
+  const barcodeText = "27/03/2001 ".repeat(30);
+  const navigate = useNavigate();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const touchStartY = useRef<number | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowHint(true), 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const triggerTransition = useCallback(() => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      navigate("/motion-graphics");
+    }, 600);
+  }, [isTransitioning, navigate]);
+
+  const handleScroll = useCallback((e: WheelEvent) => {
+    if (e.deltaY > 0) triggerTransition();
+  }, [triggerTransition]);
+
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+    touchStartY.current = null;
+    // Swipe up (finger moves up = positive delta) with 50px threshold
+    if (deltaY > 50) triggerTransition();
+  }, [triggerTransition]);
+
+  useEffect(() => {
+    window.addEventListener("wheel", handleScroll);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
+    return () => {
+      window.removeEventListener("wheel", handleScroll);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleScroll, handleTouchStart, handleTouchEnd]);
+
+  return (
+    <section className="relative h-screen w-full overflow-hidden bg-black">
+      <AnimatePresence>
+        {isTransitioning && (
+          <motion.div
+            className="absolute inset-0 z-50 bg-black"
+            initial={{ y: "-100%" }}
+            animate={{ y: "0%" }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 3D Scene - Full width background */}
+      <div className="absolute inset-0">
+        <Scene3D />
+      </div>
+
+      {/* Barcode ribbon - top left corner at 45 degrees */}
+      <div
+        className="absolute z-20 pointer-events-none"
+        style={{
+          top: "80px",
+          left: "-200px",
+          transform: "rotate(-35deg)",
+          width: "700px",
+        }}
+      >
+        <div className="overflow-hidden bg-black/70 py-1">
+          <div
+            className="whitespace-nowrap text-8xl text-white/80 animate-barcode-scroll"
+            style={{ fontFamily: "'Libre Barcode 39 Text', cursive" }}
+          >
+            {barcodeText}
+            {barcodeText}
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll hint */}
+      <AnimatePresence>
+        {showHint && !isTransitioning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+          >
+            <span
+              className="text-white/50 text-xs uppercase tracking-widest"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              Scroll para continuar
+            </span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown className="w-5 h-5 text-white/50" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Text overlay at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 z-10">
+        <div className="bg-black/85 backdrop-blur-sm px-6 py-8">
+            <p
+              className="text-sm uppercase tracking-widest -mb-1 text-white italic"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              Joaquín Calderón
+            </p>
+            <h1
+              className="font-bold text-4xl lg:text-5xl leading-tight text-white"
+              style={{ fontFamily: "'BBH Bartle', sans-serif" }}
+            >
+              Portafolio Audiovisual
+            </h1>
+            <p
+              className="text-white/60 text-lg -mt-0.5 leading-relaxed"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              Edición de Videos, Motion Graphics, Animación 3D y Diseño Gráfico
+            </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
