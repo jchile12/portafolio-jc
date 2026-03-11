@@ -62,7 +62,7 @@ const Scene = ({
   
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 900]} fov={isMobile ? 55 : isSmallScreen ? 48 : 40} />
+      <PerspectiveCamera makeDefault position={isMobile ? [0, 0, 500] : [0, 0, 900]} fov={isMobile ? 55 : isSmallScreen ? 48 : 40} />
       
       {/* Enhanced Lighting for dark TV visibility */}
       <ambientLight intensity={0.4} /> {/* Reduced ambient slightly more */} 
@@ -102,7 +102,7 @@ const Scene = ({
         /> 
       </EffectComposer>*/}
 
-      <group rotation={isMobile ? [0, 0, 0] : [0, -0.1, 0]} position={isMobile ? [-250, 100, 0] : [0, 0, 0]}>
+      <group rotation={isMobile ? [0, 0.26, 0] : [0, -0.1, 0]} position={isMobile ? [-250, -40, 0] : [0, 0, 0]}>
         <TVModel
           videoSrc={currentVideo?.src || ''}
           poster={currentVideo?.poster || ''}
@@ -137,7 +137,7 @@ const Scene = ({
 
 const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarouselProps) => {
   const [volume, setVolume] = useState(50);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [showVolumeOSD, setShowVolumeOSD] = useState(false);
   const [showChannelOSD, setShowChannelOSD] = useState(false);
@@ -223,46 +223,48 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
 
 
   return (
-    <div className={`w-full ${isMobile ? 'h-[600px]' : 'h-[min(100vh,1000px)]'} relative`} onMouseMove={resetControlsTimer}>
-      {/* Title & Description Overlay - Standard Container Alignment */}
-      <div className="absolute top-0 left-0 w-full h-full z-40 pointer-events-none flex flex-col justify-end pb-16 md:pb-24 lg:pb-48">
-         <div className="mx-6 ml-[220px] lg:ml-[250px]">
-            <div className="max-w-md">
-               <div key={currentVideoIndex} className="transform translate-y-0 opacity-0 animate-slide-up">
-                  <h2
-                    className="text-white text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-4 uppercase tracking-tighter leading-none drop-shadow-lg"
-                    style={{ fontFamily: "'BBH Hegarty', sans-serif" }}
-                  >
-                    {currentVideo.title}
-                  </h2>
-                  <div className="w-12 h-1 bg-white mb-3 md:mb-6" />
-                  <p
-                    className="text-white/80 text-sm md:text-base lg:text-lg font-light leading-relaxed drop-shadow-md"
-                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                  >
-                    {currentVideo.description}
-                  </p>
-                  {currentVideo.software && currentVideo.software.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {currentVideo.software.map((sw) => (
-                        <span
-                          key={sw}
-                          className="text-xs px-3 py-1 rounded-full border font-medium backdrop-blur-sm"
-                          style={{
-                            background: "rgba(255,255,255,0.08)",
-                            borderColor: "rgba(255,255,255,0.15)",
-                            color: "rgba(255,255,255,0.8)",
-                          }}
-                        >
-                          {sw.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-               </div>
-            </div>
-         </div>
-      </div>
+    <div className={`w-full ${isMobile ? 'flex flex-col' : 'h-[min(100vh,1000px)]'} relative`} onMouseMove={resetControlsTimer}>
+      {/* Title & Description Overlay — desktop: overlaid left; mobile: below canvas */}
+      {!isMobile && (
+        <div className="absolute top-0 left-0 w-full h-full z-40 pointer-events-none flex flex-col justify-end pb-16 md:pb-24 lg:pb-48">
+           <div className="mx-6 ml-[220px] lg:ml-[250px]">
+              <div className="max-w-md">
+                 <div key={currentVideoIndex} className="transform translate-y-0 opacity-0 animate-slide-up">
+                    <h2
+                      className="text-white text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-4 uppercase tracking-tighter leading-none drop-shadow-lg"
+                      style={{ fontFamily: "'BBH Hegarty', sans-serif" }}
+                    >
+                      {currentVideo.title}
+                    </h2>
+                    <div className="w-12 h-1 bg-white mb-3 md:mb-6" />
+                    <p
+                      className="text-white/80 text-sm md:text-base lg:text-lg font-light leading-relaxed drop-shadow-md"
+                      style={{ fontFamily: "'Montserrat', sans-serif" }}
+                    >
+                      {currentVideo.description}
+                    </p>
+                    {currentVideo.software && currentVideo.software.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {currentVideo.software.map((sw) => (
+                          <span
+                            key={sw}
+                            className="text-xs px-3 py-1 rounded-full border font-medium backdrop-blur-sm"
+                            style={{
+                              background: "rgba(255,255,255,0.08)",
+                              borderColor: "rgba(255,255,255,0.15)",
+                              color: "rgba(255,255,255,0.8)",
+                            }}
+                          >
+                            {sw.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                 </div>
+              </div>
+           </div>
+        </div>
+      )}
 
 
 
@@ -270,11 +272,11 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
 
       {/* Hint alert */}
       <div
-        className={`absolute inset-x-0 top-8 z-[51] flex justify-center pointer-events-none transition-all duration-700
+        className={`${isMobile ? 'fixed' : 'absolute'} inset-x-0 ${isMobile ? 'top-6 mx-4' : 'top-8'} z-[51] flex justify-center pointer-events-none transition-all duration-700
                     ${showHint ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
       >
         <div
-          className="px-5 py-3 rounded-xl flex items-center gap-3 animate-hint-blink"
+          className={`${isMobile ? 'px-3 py-2' : 'px-5 py-3'} rounded-xl flex items-center gap-2 md:gap-3 animate-hint-blink`}
           style={{
             background: "rgba(0,0,0,0.75)",
             border: "1px solid rgba(255,255,255,0.1)",
@@ -282,50 +284,123 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
             boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width={isMobile ? "14" : "18"} height={isMobile ? "14" : "18"} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
             <line x1="12" y1="9" x2="12" y2="13" />
             <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
-          <span className="text-white/80 text-sm font-mono">
-            Usa el control remoto para navegar entre videos
+          <span className={`text-white/80 font-mono ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            {isMobile ? 'Toca la pantalla para abrir el video' : 'Usa el control remoto para navegar entre videos'}
           </span>
         </div>
       </div>
 
-      <CRTControls
-        currentIndex={currentVideoIndex}
-        totalChannels={videos.length}
-        volume={volume}
-        isPoweredOn={isPoweredOn}
-        isMuted={isMuted}
-        onChannelChange={handleChannelChange}
-        onVolumeChange={handleVolumeChange}
-        onPowerToggle={handlePowerToggle}
-        onMuteToggle={handleMuteToggle}
-        visible={showControls}
-        onInteraction={resetControlsTimer}
-      />
+      {/* CRTControls — desktop only */}
+      {!isMobile && (
+        <CRTControls
+          currentIndex={currentVideoIndex}
+          totalChannels={videos.length}
+          volume={volume}
+          isPoweredOn={isPoweredOn}
+          isMuted={isMuted}
+          onChannelChange={handleChannelChange}
+          onVolumeChange={handleVolumeChange}
+          onPowerToggle={handlePowerToggle}
+          onMuteToggle={handleMuteToggle}
+          visible={showControls}
+          onInteraction={resetControlsTimer}
+        />
+      )}
 
-      <Canvas className="w-full h-full" shadows style={{ background: 'transparent' }} gl={{ alpha: true }}>
-        <Suspense fallback={<Html center>Loading 3D TV...</Html>}>
-          <Scene
-            currentVideo={currentVideo}
-            isPoweredOn={isPoweredOn}
-            volume={volume}
-            isMuted={isMuted}
-            showVolumeOSD={showVolumeOSD}
-            currentIndex={currentVideoIndex}
-            onPowerToggle={handlePowerToggle}
-            onVolumeChange={handleVolumeChange}
-            onChannelChange={handleChannelChange}
-            showChannelOSD={showChannelOSD}
-            onScreenClick={handleOpenPlayer}
-            playerOpen={isPlayerOpen}
-           />
+      <div className={`w-full ${isMobile ? 'h-[40vh]' : 'h-full'}`} style={{ position: 'relative' }}>
+        {/* Mobile prev/next arrows — inside canvas container so they stay fixed */}
+        {isMobile && (
+          <>
+            <button
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-[52] w-10 h-10 flex items-center justify-center rounded-full text-white/70 active:text-white transition-colors"
+              style={{
+                background: 'rgba(0,0,0,0.4)',
+                backdropFilter: 'blur(4px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+              onClick={() => handleChannelChange(-1)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-[52] w-10 h-10 flex items-center justify-center rounded-full text-white/70 active:text-white transition-colors"
+              style={{
+                background: 'rgba(0,0,0,0.4)',
+                backdropFilter: 'blur(4px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+              onClick={() => handleChannelChange(1)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </>
+        )}
+        <Canvas className="w-full h-full" shadows style={{ background: 'transparent' }} gl={{ alpha: true }}>
+          <Suspense fallback={<Html center>Procesando...</Html>}>
+            <Scene
+              currentVideo={currentVideo}
+              isPoweredOn={isPoweredOn}
+              volume={volume}
+              isMuted={isMuted}
+              showVolumeOSD={showVolumeOSD}
+              currentIndex={currentVideoIndex}
+              onPowerToggle={handlePowerToggle}
+              onVolumeChange={handleVolumeChange}
+              onChannelChange={handleChannelChange}
+              showChannelOSD={showChannelOSD}
+              onScreenClick={handleOpenPlayer}
+              playerOpen={isPlayerOpen}
+            />
+          </Suspense>
+        </Canvas>
+      </div>
 
-        </Suspense>
-      </Canvas>
+      {/* Mobile text section — below canvas, full width */}
+      {isMobile && (
+        <div className="w-full px-5 py-6">
+          <div key={currentVideoIndex} className="transform translate-y-0 opacity-0 animate-slide-up">
+            <h2
+              className="text-white text-2xl font-black mb-2 uppercase tracking-tighter leading-none drop-shadow-lg"
+              style={{ fontFamily: "'BBH Hegarty', sans-serif" }}
+            >
+              {currentVideo.title}
+            </h2>
+            <div className="w-10 h-1 bg-white mb-3" />
+            <p
+              className="text-white/80 text-sm font-light leading-relaxed drop-shadow-md"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {currentVideo.description}
+            </p>
+            {currentVideo.software && currentVideo.software.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {currentVideo.software.map((sw) => (
+                  <span
+                    key={sw}
+                    className="text-xs px-3 py-1 rounded-full border font-medium backdrop-blur-sm"
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      borderColor: "rgba(255,255,255,0.15)",
+                      color: "rgba(255,255,255,0.8)",
+                    }}
+                  >
+                    {sw.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Fullscreen Video Player Overlay */}
       {isPlayerOpen && (
@@ -333,29 +408,29 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
           onClick={handleClosePlayer}
         >
-          {/* Close button */}
+          {/* Close button — larger on mobile */}
           <button
-            className="absolute top-6 right-6 text-white/60 hover:text-white transition-colors z-10"
+            className={`absolute top-4 right-4 md:top-6 md:right-6 text-white/60 hover:text-white active:text-white transition-colors z-10 ${isMobile ? 'w-11 h-11 flex items-center justify-center rounded-full bg-black/50' : ''}`}
             onClick={handleClosePlayer}
           >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg width={isMobile ? "24" : "32"} height={isMobile ? "24" : "32"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
 
           {/* Title */}
-          <div className="absolute top-6 left-6 z-10" onClick={(e) => e.stopPropagation()}>
-            <p className="text-white/40 text-xs font-mono uppercase tracking-widest">
+          <div className={`absolute ${isMobile ? 'top-4 left-4' : 'top-6 left-6'} z-10`} onClick={(e) => e.stopPropagation()}>
+            <p className="text-white/40 text-[10px] md:text-xs font-mono uppercase tracking-widest">
               {currentVideoIndex + 1} / {videos.length}
             </p>
-            <h3 className="text-white text-lg font-bold mt-1">{currentVideo.title}</h3>
-            <p className="text-white/50 text-sm">{currentVideo.category}</p>
+            <h3 className={`text-white font-bold mt-1 ${isMobile ? 'text-sm' : 'text-lg'}`}>{currentVideo.title}</h3>
+            <p className="text-white/50 text-xs md:text-sm">{currentVideo.category}</p>
           </div>
 
           {/* Prev button */}
           <button
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               const newIndex = currentVideoIndex === 0 ? videos.length - 1 : currentVideoIndex - 1;
@@ -369,7 +444,7 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
 
           {/* Next button */}
           <button
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               const newIndex = currentVideoIndex === videos.length - 1 ? 0 : currentVideoIndex + 1;
@@ -383,7 +458,7 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
 
           {/* Video Player */}
           <div
-            className="w-[90vw] max-w-5xl aspect-video"
+            className={`${isMobile ? 'w-[96vw]' : 'w-[90vw] max-w-5xl'} aspect-video`}
             onClick={(e) => e.stopPropagation()}
           >
             <video

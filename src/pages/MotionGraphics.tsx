@@ -364,7 +364,7 @@ const MotionGraphics = () => {
       </AnimatePresence>
 
       <main>
-        <section id="motion" className="pt-20 pb-32 relative overflow-hidden">
+        <section id="motion" className="pt-20 pb-12 relative overflow-hidden">
           {/* Hero Carousel - Full Width */}
           <div id="tv-player" className="w-full mb-0 relative z-20">
             {/* Subtle Purple Background Gradient for TV Model */}
@@ -382,7 +382,7 @@ const MotionGraphics = () => {
           </div>
 
 
-          <div className="relative z-10 mt-12 mx-6 ml-[180px] lg:ml-[200px]">
+          <div className="relative z-10 mt-12 mx-6 md:ml-[180px] lg:ml-[200px]">
             {sections.map((section) => {
               const sectionVideos = videos.filter((v) => v.section === section.key);
               if (sectionVideos.length === 0) return null;

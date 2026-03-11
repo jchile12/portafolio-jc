@@ -127,7 +127,7 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+            className="absolute bottom-28 md:bottom-32 left-0 right-0 z-20 flex flex-col items-center gap-2"
           >
             <span
               className="text-white/50 text-xs uppercase tracking-widest"
@@ -147,21 +147,21 @@ const Hero = () => {
 
       {/* Text overlay at bottom */}
       <div className="absolute bottom-0 left-0 right-0 z-10">
-        <div className="bg-black/85 backdrop-blur-sm px-6 py-8">
+        <div className="bg-black/85 backdrop-blur-sm px-4 py-5 md:px-6 md:py-8">
             <p
-              className="text-sm uppercase tracking-widest -mb-1 text-white italic"
+              className="text-[10px] md:text-sm uppercase tracking-widest mb-0.5 text-white italic leading-none"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
               Joaquín Calderón
             </p>
             <h1
-              className="font-bold text-4xl lg:text-5xl leading-tight text-white"
+              className="font-bold text-xl md:text-4xl lg:text-5xl leading-none text-white"
               style={{ fontFamily: "'BBH Bartle', sans-serif" }}
             >
               Portafolio Audiovisual
             </h1>
             <p
-              className="text-white/60 text-lg -mt-0.5 leading-relaxed"
+              className="text-white/60 text-xs md:text-lg mt-0.5 leading-tight"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
               Edición de Videos, Motion Graphics, Animación 3D y Diseño Gráfico

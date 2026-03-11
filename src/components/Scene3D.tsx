@@ -303,20 +303,23 @@ const JCText = () => {
         ) : (
           <MeshTransmissionMaterial
             backside
-            backsideThickness={0.5}
-            thickness={0.5}
-            chromaticAberration={1}
-            anisotropicBlur={0.5}
-            distortion={0.5}
-            distortionScale={0.5}
-            temporalDistortion={0.1}
+            backsideThickness={0.3}
+            thickness={0.2}
+            chromaticAberration={1.5}
+            anisotropicBlur={0.3}
+            distortion={0.3}
+            distortionScale={0.3}
+            temporalDistortion={0.05}
             iridescence={1}
-            iridescenceIOR={1}
+            iridescenceIOR={1.2}
             iridescenceThicknessRange={[0, 1400]}
             transmission={1}
             roughness={0}
-            ior={1.5}
+            ior={1.8}
             color="#ffffff"
+            clearcoat={1}
+            clearcoatRoughness={0}
+            envMapIntensity={2}
           />
         )}
       </Text3D>
