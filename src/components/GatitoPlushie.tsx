@@ -3,9 +3,11 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+const MODEL_URL = `${import.meta.env.BASE_URL}models/gatito-plushie.glb`;
+
 export function GatitoPlushie(props: any) {
   const group = useRef<THREE.Group>(null);
-  const { nodes, materials, animations } = useGLTF('/models/Gatito Plushie.glb') as any;
+  const { nodes, materials, animations } = useGLTF(MODEL_URL) as any;
   const { actions } = useAnimations(animations, group);
 
   // Intentar identificar el hueso de la cabeza. 
@@ -76,6 +78,6 @@ export function GatitoPlushie(props: any) {
   );
 }
 
-useGLTF.preload('/models/Gatito Plushie.glb');
+useGLTF.preload(MODEL_URL);
 
 export default GatitoPlushie;

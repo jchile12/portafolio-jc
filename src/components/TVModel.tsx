@@ -420,7 +420,7 @@ export function TVModel({
   }, [screenMaterial, isPoweredOn]);
 
   // Load the GLB model (Restored)
-  const { scene } = useGLTF('/models/crt_tv.glb');
+  const { scene } = useGLTF(`${import.meta.env.BASE_URL}models/crt_tv.glb`);
   const tvRef = useRef<THREE.Group>(null);
   
   // Clone scene to allow multiple instances with different materials/states

@@ -282,7 +282,7 @@ const JCText = () => {
   return (
     <Center position={isMobileDevice ? [0, 0, 0] : [2.5, 0, 0]}>
       <Text3D
-        font="/fonts/Bonheur Royale_Regular.json"
+        font={`${import.meta.env.BASE_URL}fonts/bonheur-royale-regular.json`}
         size={isMobileDevice ? 1.8 : 2.5}
         height={0.5}
         curveSegments={32}
