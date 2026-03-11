@@ -15,7 +15,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/portafolio-jc">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/motion-graphics" element={<MotionGraphics />} />

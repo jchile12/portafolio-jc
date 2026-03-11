@@ -24,7 +24,16 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react()].filter(Boolean),
+  plugins: [
+    react(),
+    {
+      name: 'copy-404',
+      closeBundle() {
+        const distDir = path.resolve(__dirname, 'dist');
+        fs.copyFileSync(path.join(distDir, 'index.html'), path.join(distDir, '404.html'));
+      },
+    },
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
