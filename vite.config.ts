@@ -23,6 +23,13 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    proxy: {
+      '/r2-videos': {
+        target: 'https://pub-e6e7daf16b12442e8face05aa72e9a27.r2.dev',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/r2-videos/, ''),
+      },
+    },
   },
   plugins: [
     react(),

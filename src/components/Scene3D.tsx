@@ -578,7 +578,7 @@ const Scene = () => {
   );
 };
 
-const Scene3D = () => {
+const Scene3D = ({ onReady }: { onReady?: () => void }) => {
   return (
     <div className="absolute inset-0 z-0" style={isMobileDevice ? { pointerEvents: 'none' } : undefined}>
       <CanvasErrorBoundary>
@@ -590,6 +590,7 @@ const Scene3D = () => {
             gl.outputColorSpace = THREE.SRGBColorSpace;
             gl.toneMapping = THREE.ACESFilmicToneMapping;
             gl.toneMappingExposure = 1;
+            onReady?.();
           }}
         >
           <AdaptiveDpr pixelated />

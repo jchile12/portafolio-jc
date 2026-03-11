@@ -7,38 +7,41 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Instagram */}
           <a
-            href="#"
+            href="https://www.instagram.com/portafoliojoacoc/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
           >
             <Instagram className="w-5 h-5 group-hover:text-pink-400 transition-colors" />
-            <span className="text-sm">Instagram</span>
+            <span className="text-sm">@portafoliojoacoc</span>
           </a>
 
           {/* LinkedIn */}
           <a
-            href="#"
+            href="https://www.linkedin.com/in/joaquin-ignacio-calderon-contreras-36144539b/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
           >
             <Linkedin className="w-5 h-5 group-hover:text-blue-400 transition-colors" />
-            <span className="text-sm">LinkedIn</span>
+            <span className="text-sm">Joaquín Calderón</span>
           </a>
 
           {/* Teléfono y Mail */}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-3 text-white/60">
-              <Phone className="w-5 h-5" />
-              <span className="text-sm">+56 9 XXXX XXXX</span>
-            </div>
             <a
-              href="mailto:correo@ejemplo.com"
+              href="tel:+56977790672"
+              className="flex items-center gap-3 text-white/60 hover:text-white transition-colors"
+            >
+              <Phone className="w-5 h-5" />
+              <span className="text-sm">+56 9 7779 0672</span>
+            </a>
+            <a
+              href="mailto:joacalderonc@gmail.com"
               className="flex items-center gap-3 text-white/60 hover:text-white transition-colors"
             >
               <Mail className="w-5 h-5" />
-              <span className="text-sm">correo@ejemplo.com</span>
+              <span className="text-sm">joacalderonc@gmail.com</span>
             </a>
           </div>
         </div>

@@ -9,6 +9,7 @@ const Hero = () => {
   const navigate = useNavigate();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
   const touchStartY = useRef<number | null>(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Hero = () => {
     setIsTransitioning(true);
     setTimeout(() => {
       navigate("/motion-graphics");
-    }, 600);
+    }, 900);
   }, [isTransitioning, navigate]);
 
   const handleScroll = useCallback((e: WheelEvent) => {
@@ -52,21 +53,50 @@ const Hero = () => {
   }, [handleScroll, handleTouchStart, handleTouchEnd]);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <motion.section
+      className="relative h-screen w-full overflow-hidden bg-black"
+      animate={isTransitioning ? {
+        scale: 1.3,
+        opacity: 0,
+      } : {
+        scale: 1,
+        opacity: 1,
+      }}
+      transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+    >
+
+      {/* Loading placeholder */}
       <AnimatePresence>
-        {isTransitioning && (
+        {!sceneReady && (
           <motion.div
-            className="absolute inset-0 z-50 bg-black"
-            initial={{ y: "-100%" }}
-            animate={{ y: "0%" }}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          />
+            className="absolute inset-0 z-30 bg-black flex flex-col items-center justify-center gap-6"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.span
+              className="text-white/90 text-8xl lg:text-9xl"
+              style={{ fontFamily: "'Bonheur Royale', cursive" }}
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              JC
+            </motion.span>
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+              <span
+                className="text-white/40 text-xs uppercase tracking-widest"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
+              >
+                Cargando
+              </span>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
       {/* 3D Scene - Full width background */}
       <div className="absolute inset-0">
-        <Scene3D />
+        <Scene3D onReady={() => setSceneReady(true)} />
       </div>
 
       {/* Barcode ribbon - top left corner at 45 degrees */}
@@ -138,7 +168,7 @@ const Hero = () => {
             </p>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

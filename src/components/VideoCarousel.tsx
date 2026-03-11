@@ -161,7 +161,6 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
-    setShowHint(false);
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 5000);
   }, []);
@@ -227,14 +226,20 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
     <div className={`w-full ${isMobile ? 'h-[600px]' : 'h-[min(100vh,1000px)]'} relative`} onMouseMove={resetControlsTimer}>
       {/* Title & Description Overlay - Standard Container Alignment */}
       <div className="absolute top-0 left-0 w-full h-full z-40 pointer-events-none flex flex-col justify-end pb-16 md:pb-24 lg:pb-48">
-         <div className="mx-6 ml-[180px] lg:ml-[200px]">
+         <div className="mx-6 ml-[220px] lg:ml-[250px]">
             <div className="max-w-md">
                <div key={currentVideoIndex} className="transform translate-y-0 opacity-0 animate-slide-up">
-                  <h2 className="text-white text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-4 uppercase tracking-tighter leading-none drop-shadow-lg">
+                  <h2
+                    className="text-white text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-4 uppercase tracking-tighter leading-none drop-shadow-lg"
+                    style={{ fontFamily: "'BBH Hegarty', sans-serif" }}
+                  >
                     {currentVideo.title}
                   </h2>
                   <div className="w-12 h-1 bg-white mb-3 md:mb-6" />
-                  <p className="text-white/80 text-sm md:text-base lg:text-lg font-light leading-relaxed drop-shadow-md">
+                  <p
+                    className="text-white/80 text-sm md:text-base lg:text-lg font-light leading-relaxed drop-shadow-md"
+                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                  >
                     {currentVideo.description}
                   </p>
                   {currentVideo.software && currentVideo.software.length > 0 && (
