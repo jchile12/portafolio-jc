@@ -201,6 +201,21 @@
   animation: barcode-scroll 40s linear infinite;
 }
 
+@media (max-width: 768px) {
+  .animate-barcode-scroll {
+    animation-duration: 80s;
+  }
+}
+
+@keyframes hint-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-hint-blink {
+  animation: hint-blink 1.5s ease-in-out infinite;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;

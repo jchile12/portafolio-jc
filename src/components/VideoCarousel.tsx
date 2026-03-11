@@ -141,15 +141,27 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
   const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [showVolumeOSD, setShowVolumeOSD] = useState(false);
   const [showChannelOSD, setShowChannelOSD] = useState(false);
-  const [showControls, setShowControls] = useState(false);
+  const [showControls, setShowControls] = useState(true);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const [showHint, setShowHint] = useState(true);
   const volumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const channelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const playerVideoRef = useRef<HTMLVideoElement | null>(null);
 
+  // Initial auto-hide: controls after 5s, hint after 7s
+  useEffect(() => {
+    controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 5000);
+    const hintTimeout = setTimeout(() => setShowHint(false), 7000);
+    return () => {
+      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+      clearTimeout(hintTimeout);
+    };
+  }, []);
+
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
+    setShowHint(false);
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 5000);
   }, []);
@@ -163,12 +175,6 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
     if (playerVideoRef.current) {
       playerVideoRef.current.pause();
     }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-    };
   }, []);
 
   // Close player on Escape
@@ -256,6 +262,31 @@ const VideoCarousel = ({ videos, currentVideoIndex, onIndexChange }: VideoCarous
 
 
 
+
+      {/* Hint alert */}
+      <div
+        className={`absolute inset-x-0 top-8 z-[51] flex justify-center pointer-events-none transition-all duration-700
+                    ${showHint ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
+      >
+        <div
+          className="px-5 py-3 rounded-xl flex items-center gap-3 animate-hint-blink"
+          style={{
+            background: "rgba(0,0,0,0.75)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span className="text-white/80 text-sm font-mono">
+            Usa el control remoto para navegar entre videos
+          </span>
+        </div>
+      </div>
 
       <CRTControls
         currentIndex={currentVideoIndex}

@@ -81,37 +81,23 @@ const CRTControls = ({
           />
         </div>
 
-        {/* Top row: Power + Mute */}
-        <div className="flex gap-2 w-full">
-          <RemoteButton
-            onClick={onPowerToggle}
-            color={isPoweredOn ? "#ef4444" : "#555"}
-            glow={isPoweredOn ? "rgba(239,68,68,0.5)" : "none"}
-            size="wide"
-            label="PWR"
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path
-                d="M7 1.5v4M4 3.5A5 5 0 1 0 10 3.5"
-                stroke={isPoweredOn ? "#fff" : "#888"}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </RemoteButton>
-          <RemoteButton
-            onClick={onMuteToggle}
-            color={isMuted ? "#f59e0b" : "#3a3a3a"}
-            glow={isMuted ? "rgba(245,158,11,0.5)" : "none"}
-            size="wide"
-            label="MUTE"
-            disabled={!isPoweredOn}
-          >
-            <span className="font-mono text-[10px]" style={{ color: isMuted ? "#fff" : "#aaa" }}>
-              {isMuted ? "MUTED" : "SOUND"}
-            </span>
-          </RemoteButton>
-        </div>
+        {/* Power button (own row) */}
+        <RemoteButton
+          onClick={onPowerToggle}
+          color={isPoweredOn ? "#ef4444" : "#555"}
+          glow={isPoweredOn ? "rgba(239,68,68,0.5)" : "none"}
+          size="wide"
+          label="PWR"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M7 1.5v4M4 3.5A5 5 0 1 0 10 3.5"
+              stroke={isPoweredOn ? "#fff" : "#888"}
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </RemoteButton>
 
         {/* LED indicator */}
         <div className="flex items-center gap-1.5">
@@ -158,21 +144,10 @@ const CRTControls = ({
 
         <Divider />
 
-        {/* CH and VOL side by side */}
-        <div className="flex gap-3 w-full">
-          {/* CH column */}
-          <div className="flex flex-col gap-1.5 flex-1">
-            <span className="text-[9px] font-mono tracking-widest text-center font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>CH</span>
-            <RemoteButton
-              onClick={() => onChannelChange(1)}
-              color="#3a3a3a"
-              glow="none"
-              size="wide"
-              label="CH +"
-              disabled={!isPoweredOn}
-            >
-              <span className="text-white/70 text-xs font-mono">+</span>
-            </RemoteButton>
+        {/* CH row (horizontal − / +) */}
+        <div className="w-full flex flex-col gap-1.5">
+          <span className="text-[9px] font-mono tracking-widest text-center font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>CH</span>
+          <div className="flex gap-2 w-full">
             <RemoteButton
               onClick={() => onChannelChange(-1)}
               color="#3a3a3a"
@@ -181,23 +156,27 @@ const CRTControls = ({
               label="CH −"
               disabled={!isPoweredOn}
             >
-              <span className="text-white/70 text-xs font-mono">−</span>
+              <span className="text-white/70 text-xs font-mono">◀</span>
             </RemoteButton>
-          </div>
-
-          {/* VOL column */}
-          <div className="flex flex-col gap-1.5 flex-1">
-            <span className="text-[9px] font-mono tracking-widest text-center font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>VOL</span>
             <RemoteButton
-              onClick={() => onVolumeChange(10)}
+              onClick={() => onChannelChange(1)}
               color="#3a3a3a"
               glow="none"
               size="wide"
-              label="VOL +"
+              label="CH +"
               disabled={!isPoweredOn}
             >
-              <span className="text-white/70 text-xs font-mono">+</span>
+              <span className="text-white/70 text-xs font-mono">▶</span>
             </RemoteButton>
+          </div>
+        </div>
+
+        <Divider />
+
+        {/* VOL row (horizontal − / +) */}
+        <div className="w-full flex flex-col gap-1.5">
+          <span className="text-[9px] font-mono tracking-widest text-center font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>VOL</span>
+          <div className="flex gap-2 w-full">
             <RemoteButton
               onClick={() => onVolumeChange(-10)}
               color="#3a3a3a"
@@ -208,8 +187,32 @@ const CRTControls = ({
             >
               <span className="text-white/70 text-xs font-mono">−</span>
             </RemoteButton>
+            <RemoteButton
+              onClick={() => onVolumeChange(10)}
+              color="#3a3a3a"
+              glow="none"
+              size="wide"
+              label="VOL +"
+              disabled={!isPoweredOn}
+            >
+              <span className="text-white/70 text-xs font-mono">+</span>
+            </RemoteButton>
           </div>
         </div>
+
+        {/* Mute button (own row) */}
+        <RemoteButton
+          onClick={onMuteToggle}
+          color={isMuted ? "#f59e0b" : "#3a3a3a"}
+          glow={isMuted ? "rgba(245,158,11,0.5)" : "none"}
+          size="wide"
+          label="MUTE"
+          disabled={!isPoweredOn}
+        >
+          <span className="font-mono text-[10px]" style={{ color: isMuted ? "#fff" : "#aaa" }}>
+            {isMuted ? "MUTED" : "SOUND"}
+          </span>
+        </RemoteButton>
 
         {/* Volume bar */}
         <div className="w-full flex flex-col gap-1">
